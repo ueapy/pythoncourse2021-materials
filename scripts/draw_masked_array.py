@@ -6,7 +6,7 @@ import os
 nx = 5
 ny = 4
 
-np.random.seed(0)
+#np.random.seed(0)
 mask = set(np.random.randint(0, nx*ny, 11))
 
 fig = plt.figure(figsize=(nx//2*3, ny//2), facecolor='w')
@@ -46,6 +46,8 @@ for iax in (ax, ax2, ax3):
     iax.set_xlim((0, nx))
     iax.set_ylim((0, ny))
     iax.set_aspect('equal')
+
+plt.show()
 
 fig.savefig(os.path.join(os.path.pardir, 'figures', 'masked_array.png'),
             bbox_inches='tight')
