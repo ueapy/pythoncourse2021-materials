@@ -1,3 +1,7 @@
+import requests
+import urllib.parse
+from math import cos, sin, acos, pi
+
 
 def calc_co2e(dist,
               returnf=False,
@@ -48,31 +52,46 @@ def calc_co2e(dist,
     return co2e
 
 
-def create_sst(region_name):
+def calc_dist(origin, destination):
     """
-    Create fake SST data (degC) for a given region
+    Calculate distances for a given itenerary
     
     Inputs
     ------
-    region_name: ...continue the docstring...
-    
-    n: integer, optional. Length of the returned data list      
-    
+    origin, destination - names of the cities
+        
     Returns
     -------
-    ...continue the docstring...
-    """
+    distance in km
     
-    if region_name == 'NS':
-        # North Sea
-        sst = list(range(5, 15, 1))
-    elif region_name == 'WS':
-        # White Sea
-        sst = list(range(0, 10, 1))
-    elif region_name == 'BS':
-        # Black Sea
-        sst = list(range(15, 25, 1))
-    else:
-        raise ValueError( f'Input value of {region_name} is not recognised')
+    Uses:
+    Great circle approximation for spherical earth
+    dist = 6378.388 * acos(sin(lat1) * sin(lat2) + cos(lat1) * cos(lat2) * cos(lon2 - lon1))
+    where lat and lon are in radians
+    """
+
+    (lat1,lon1) = get_latlon(origin)
+    (lat2,lon2) = get_latlon(destination)
+    lat1 = lat1/180*pi
+    lon1 = lon1/180*pi
+    lat2 = lat2/180*pi
+    lon2 = lon2/180*pi
+    
+    dist = 6378.388 * acos(sin(lat1) * sin(lat2) + cos(lat1) * cos(lat2) * cos(lon2 - lon1))
         
-    return sst
+    return dist
+
+
+def get_latlon(location):
+    
+    url = 'https://nominatim.openstreetmap.org/search/' + urllib.parse.quote(location) +'?format=json'
+
+    response = requests.get(url).json()
+
+    if not response:
+        print('Location not found:',location)
+    
+    lat = float( response[0]["lat"] )
+    lon = float( response[0]["lon"] )
+    
+    return (lat,lon)
