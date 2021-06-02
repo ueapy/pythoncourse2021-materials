@@ -1,4 +1,4 @@
-name: course2020
+name: course2021
 channels:
    - conda-forge
 dependencies:
