@@ -12,6 +12,7 @@ dependencies:
    - xlrd
    - xlwt
    - cartopy
+   - owslib
    - xarray
    - seaborn
    - netcdf4
